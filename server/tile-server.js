@@ -73,11 +73,12 @@ module.exports = function(app, settings) {
     // for `:tileset` parameters that may contain a `.` character.
     var tile = /^\/1.0.0\/([\w+|\d+|.|-]*)?\/([-]?\d+)\/([-]?\d+)\/([-]?\d+).(png|jpg|jpeg)/;
     app.get(tile, validateTileset, loadMapFileHeaders, function(req, res, next) {
+        var newY = (Math.pow(2, req.params[1]) - 1) - req.params[3];
         var tile = new Tile({
             type: 'mbtiles',
             datasource: res.mapfile,
             format: req.params[4],
-            xyz: [req.params[2], req.params[3], req.params[1]]
+            xyz: [req.params[2], newY, req.params[1]]
         });
         tile.render(function(err, data) {
             if (!err) {
